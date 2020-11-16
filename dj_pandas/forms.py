@@ -5,6 +5,8 @@ import os
 
 
 
+
+
 def get_countries_list():
     module_dir = os.path.dirname(__file__)
     file_path = os.path.join(module_dir, 'csv/master.csv')
@@ -25,5 +27,14 @@ by_choices = (
 class CountriesForm(forms.Form):
     countries = forms.MultipleChoiceField(choices = get_countries_list, label="Países",
     widget= forms.SelectMultiple(attrs={'class':'selectpicker'}) )
-    by = forms.ChoiceField(choices = by_choices, label="Orgnizar por",
+    by = forms.ChoiceField(choices = by_choices, label="Organizar por",
     widget= forms.Select(attrs={'class':'selectpicker'}))
+
+
+    def clean_countries(self):
+        countries = self.cleaned_data['countries']
+
+        if len(countries) > 3:
+            raise forms.ValidationError('ocorreu um erro: Selecione até 3 países')
+
+        return countries
